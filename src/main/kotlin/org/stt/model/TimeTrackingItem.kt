@@ -5,7 +5,12 @@ import org.stt.time.preciseToSecond
 import java.time.LocalDateTime
 
 
-class TimeTrackingItem(val activity: String, start: LocalDateTime, end: LocalDateTime? = null) {
+class TimeTrackingItem(
+    val activity: String,
+    start: LocalDateTime,
+    end: LocalDateTime? = null,
+    val tags: Map<String, String> = emptyMap()
+) {
     val start: LocalDateTime
     val end: LocalDateTime?
 
@@ -26,19 +31,23 @@ class TimeTrackingItem(val activity: String, start: LocalDateTime, end: LocalDat
     fun sameStartAs(other: TimeTrackingItem) = start == other.start
 
     fun intersects(other: TimeTrackingItem) =
-            (end?.isAfter(other.start) ?: true) && (other.end?.isAfter(start) ?: true)
+        (end?.isAfter(other.start) ?: true) && (other.end?.isAfter(start) ?: true)
 
-    fun endsSameOrAfter(other: TimeTrackingItem) = other.end == end || other.end != null && end?.isBefore(other.end) != true
+    fun endsSameOrAfter(other: TimeTrackingItem) =
+        other.end == end || other.end != null && end?.isBefore(other.end) != true
 
     fun endsAtOrBefore(dateTime: LocalDateTime) = end != null && !dateTime.isBefore(end)
 
-    fun withEnd(newEnd: LocalDateTime): TimeTrackingItem = TimeTrackingItem(activity, start, newEnd)
+    fun withEnd(newEnd: LocalDateTime): TimeTrackingItem = TimeTrackingItem(activity, start, newEnd, tags)
 
-    fun withPendingEnd(): TimeTrackingItem = TimeTrackingItem(activity, start)
+    fun withPendingEnd(): TimeTrackingItem = TimeTrackingItem(activity, start, tags=tags)
 
-    fun withStart(newStart: LocalDateTime): TimeTrackingItem = TimeTrackingItem(activity, newStart, end)
+    fun withStart(newStart: LocalDateTime): TimeTrackingItem = TimeTrackingItem(activity, newStart, end, tags)
 
-    fun withActivity(newActivity: String): TimeTrackingItem = TimeTrackingItem(newActivity, start, end)
+    fun withActivity(newActivity: String): TimeTrackingItem = TimeTrackingItem(newActivity, start, end, tags)
+
+    fun withMoreTags(additionalTags: Map<String, String>): TimeTrackingItem =
+        TimeTrackingItem(activity, start, end, tags + additionalTags)
 
     override fun toString(): String = ("$start - $end : $activity")
 

@@ -22,7 +22,7 @@ class SummingReportGeneratorTest {
     private var sut: SummingReportGenerator? = null
 
     @Mock
-    private lateinit var itemCategorizer: ItemCategorizer;
+    private lateinit var itemCategorizer: ItemCategorizer
 
     @Mock
     private lateinit var rounder: DurationRounder
@@ -31,7 +31,7 @@ class SummingReportGeneratorTest {
     fun setup() {
         closeable = MockitoAnnotations.openMocks(this)
         given(itemCategorizer.getCategory(anyString())).willReturn(ItemCategorizer.ItemCategory.WORKTIME)
-        given(rounder.roundDuration(anyOrNull())).willReturn(Duration.ofDays(1));
+        given(rounder.roundDuration(anyOrNull())).willReturn(Duration.ofDays(1))
     }
 
     @After
@@ -51,7 +51,11 @@ class SummingReportGeneratorTest {
             LocalDateTime.of(2012, 12, 12, 14, 3, 0)
         )
 
-        sut = SummingReportGenerator(Stream.of(itemBeforeHole, itemAfterHole), itemCategorizer, rounder)
+        sut = SummingReportGenerator(
+            Stream.of(itemBeforeHole, itemAfterHole),
+            rounder,
+            itemAggregator = GroupByCommentAggregator(rounder, itemCategorizer)
+        )
 
         // WHEN
         val report = sut!!.createReport()
@@ -86,7 +90,11 @@ class SummingReportGeneratorTest {
             )
         )
 
-        sut = SummingReportGenerator(Stream.of(expectedItem, expectedItem2, expectedItem3), itemCategorizer, rounder)
+        sut = SummingReportGenerator(
+            Stream.of(expectedItem, expectedItem2, expectedItem3),
+            rounder,
+            itemAggregator = GroupByCommentAggregator(rounder, itemCategorizer)
+        )
 
         // WHEN
         val report = sut!!.createReport()
@@ -120,7 +128,11 @@ class SummingReportGeneratorTest {
             )
         )
 
-        sut = SummingReportGenerator(Stream.of(expectedItem, expectedItem2), itemCategorizer, rounder)
+        sut = SummingReportGenerator(
+            Stream.of(expectedItem, expectedItem2),
+            rounder,
+            itemAggregator = GroupByCommentAggregator(rounder, itemCategorizer)
+        )
 
         // WHEN
         val report = sut!!.createReport()
@@ -150,7 +162,11 @@ class SummingReportGeneratorTest {
             LocalDateTime.of(2012, 12, 12, 14, 15, 14), endOfLastItem
         )
 
-        sut = SummingReportGenerator(Stream.of(expectedItem, expectedItem2), itemCategorizer, rounder)
+        sut = SummingReportGenerator(
+            Stream.of(expectedItem, expectedItem2),
+            rounder,
+            itemAggregator = GroupByCommentAggregator(rounder, itemCategorizer)
+        )
 
         // WHEN
         val report = sut!!.createReport()

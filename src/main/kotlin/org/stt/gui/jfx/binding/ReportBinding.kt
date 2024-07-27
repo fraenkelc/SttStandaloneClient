@@ -7,10 +7,11 @@ package org.stt.gui.jfx.binding
 
 import javafx.beans.binding.ObjectBinding
 import javafx.beans.value.ObservableValue
+import org.stt.model.Report
 import org.stt.query.Criteria
 import org.stt.query.TimeTrackingItemQueries
+import org.stt.reporting.GroupByCommentAggregator
 import org.stt.reporting.SummingReportGenerator
-import org.stt.reporting.SummingReportGenerator.Report
 import org.stt.text.ItemCategorizer
 import org.stt.time.DurationRounder
 import org.stt.time.until
@@ -38,6 +39,11 @@ class ReportBinding(val reportStart: ObservableValue<LocalDate>,
     private fun createSummaryReportFor(): Report {
         val criteria = Criteria()
         criteria.withStartBetween(reportStart.value.atStartOfDay() until reportEnd.value.atStartOfDay())
-        queries.queryItems(criteria).use { items -> return SummingReportGenerator(items, itemCategorizer, rounder).createReport() }
+        queries.queryItems(criteria).use { items ->
+            return SummingReportGenerator(
+                items, rounder,
+                itemAggregator = GroupByCommentAggregator(rounder, itemCategorizer)
+            ).createReport()
+        }
     }
 }

@@ -8,6 +8,7 @@ import org.stt.grammar.EnglishCommandsParser
 import org.stt.model.TimeTrackingItem
 import org.stt.query.Criteria
 import org.stt.query.TimeTrackingItemQueries
+import org.stt.reporting.GroupByCommentAggregator
 import org.stt.reporting.OvertimeReportGenerator
 import org.stt.reporting.SummingReportGenerator
 import org.stt.reporting.WorkingtimeItemProvider
@@ -135,7 +136,10 @@ constructor(private val queries: TimeTrackingItemQueries,
         criteria.withStartBetween(reportStart!! until reportEnd)
 
         queries.queryItems(criteria).use { itemsToConsider ->
-            val reporter = SummingReportGenerator(itemsToConsider, categorizer, rounder )
+            val reporter = SummingReportGenerator(
+                itemsToConsider, rounder,
+                itemAggregator = GroupByCommentAggregator(rounder, categorizer)
+            )
             val report = reporter.createReport()
 
             if (DateTimes.isToday(reportStart)) {

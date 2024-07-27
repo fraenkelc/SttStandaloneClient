@@ -1,6 +1,5 @@
 package org.stt.gui.jfx
 
-import javafx.scene.control.skin.DatePickerSkin
 import javafx.animation.PauseTransition
 import javafx.application.Platform
 import javafx.beans.binding.*
@@ -14,6 +13,7 @@ import javafx.scene.control.*
 import javafx.scene.control.TableColumn.CellDataFeatures
 import javafx.scene.control.TableColumn.SortType
 import javafx.scene.control.cell.PropertyValueFactory
+import javafx.scene.control.skin.DatePickerSkin
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
 import javafx.scene.input.MouseEvent
@@ -34,8 +34,8 @@ import org.stt.gui.jfx.binding.MappedListBinding
 import org.stt.gui.jfx.binding.ReportBinding
 import org.stt.gui.jfx.binding.STTBindings
 import org.stt.model.ItemModified
+import org.stt.model.Report
 import org.stt.query.TimeTrackingItemQueries
-import org.stt.reporting.SummingReportGenerator.Report
 import org.stt.text.ItemCategorizer
 import org.stt.text.ItemGrouper
 import org.stt.time.DateTimes
