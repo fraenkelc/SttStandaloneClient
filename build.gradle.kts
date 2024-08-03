@@ -86,6 +86,11 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
     testImplementation("org.assertj:assertj-core:3.18.1")
     testImplementation("junit:junit-dep:4.11")
+    testImplementation(platform("org.junit:junit-bom:5.10.3"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
+
 }
 
 javafx {
@@ -111,6 +116,7 @@ tasks.compileJava {
 }
 
 tasks.test {
+    useJUnitPlatform()
     extensions.configure(TestModuleOptions::class) {
         // disable java-module path for tests
         runOnClasspath = true
