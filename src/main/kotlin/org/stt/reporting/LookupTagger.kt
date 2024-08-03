@@ -9,13 +9,13 @@ class LookupTagger(
     private val dictionary: Map<String, String>,
     private val sourceTag: String,
     private val targetTag: String,
-    private val fallback: String? = null
-) {
-    fun process(item: TimeTrackingItem): TimeTrackingItem {
+    private val fallbackValue: String? = null
+) : ItemProcessor {
+    override fun process(item: TimeTrackingItem): TimeTrackingItem {
         val prev = item.tags[sourceTag]
         if (prev != null) {
             val replacement = dictionary[prev]
-            (replacement ?: fallback)?.let {
+            (replacement ?: fallbackValue)?.let {
                 return item.withMoreTags(mapOf(targetTag to it))
             }
         }

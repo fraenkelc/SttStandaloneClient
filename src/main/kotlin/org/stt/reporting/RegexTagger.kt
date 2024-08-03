@@ -13,8 +13,8 @@ class RegexTagger(
     private val pattern: Pattern,
     private val tagName: MatchOrConstant,
     private val tagValue: MatchOrConstant
-) {
-    fun process(item: TimeTrackingItem): TimeTrackingItem {
+) : ItemProcessor {
+    override fun process(item: TimeTrackingItem): TimeTrackingItem {
         val matcher = pattern.matcher(item.activity)
         if (matcher.find()) {
             val name = tagName.evaluate(matcher)
@@ -28,6 +28,7 @@ class RegexTagger(
         data class NamedGroupMatch(private val group: String) : MatchOrConstant() {
             fun extract(matcher: Matcher): String = matcher.group(group)
         }
+
         data class NumericGroupMatch(private val group: Int) : MatchOrConstant() {
             fun extract(matcher: Matcher): String = matcher.group(group)
         }

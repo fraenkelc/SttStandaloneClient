@@ -15,7 +15,7 @@ import java.util.stream.Stream
 class SummingReportGenerator(
     private val itemsToRead: Stream<TimeTrackingItem>,
     private val rounder: DurationRounder,
-    private val itemProcessors : List<(TimeTrackingItem) -> TimeTrackingItem> = emptyList(),
+    private val itemProcessors: List<ItemProcessor> = emptyList(),
     private val itemAggregator: ReportingItemAggregator
 ) : ReportGenerator {
 
@@ -26,7 +26,7 @@ class SummingReportGenerator(
         var uncoveredDuration = Duration.ZERO
         var lastItem: TimeTrackingItem? = null
 
-        itemsToRead.map { itemProcessors.fold(it) { acc, processor -> processor(acc) } }.use { items ->
+        itemsToRead.map { itemProcessors.fold(it) { acc, processor -> processor.process(acc) } }.use { items ->
             val it = items.iterator()
             while (it.hasNext()) {
                 val item = it.next()
